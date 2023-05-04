@@ -39,19 +39,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void saveProduct(ProductDTO productDTO) {
+    public ProductDTO saveProduct(ProductDTO productDTO) {
         Product product = ProductDTO.toEntity(productDTO);
         productRepository.save(product);
+        ProductDTO result = ProductDTO.toDto(product);
+        return result;
     }
 
     @Override
-    public void updateProduct(ProductDTO productDTO) {
+    public ProductDTO updateProduct(ProductDTO productDTO) {
+        if (!productRepository.existsById(productDTO.getId())) {
+            throw new ProductNotFoundException("Product not found for update with id" + productDTO.getId());
+        }
         Product product = ProductDTO.toEntity(productDTO);
         productRepository.save(product);
+        ProductDTO result = ProductDTO.toDto(product);
+        return result;
     }
 
     @Override
     public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException("Product not found for delete with id" + id);
+        }
         productRepository.deleteById(id);
     }
 }
