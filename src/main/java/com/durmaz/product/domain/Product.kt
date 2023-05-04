@@ -8,19 +8,19 @@ import javax.persistence.*
 data class Product @JvmOverloads constructor(
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         val id: Long? = 0,
 
-        @Column(nullable = false)
+        @Column(name = "name" ,nullable = false)
         val name: String,
 
-        @Column(nullable = false)
+        @Column(name = "description")
         val description: String,
 
-        @Column(nullable = false)
+        @Column(name = "price" ,nullable = false)
         val price: Double,
 
-        @Column(nullable = false)
+        @Column(name = "category" ,nullable = false)
         val category: String,
 
         @Column(name = "available_stock", nullable = false)
