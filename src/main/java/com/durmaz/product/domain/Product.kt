@@ -25,4 +25,5 @@ data class Product @JvmOverloads constructor(
 
         @Column(name = "available_stock", nullable = false)
         val availableStock: Int,
-)
+){
+}

@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO updateProduct(ProductDTO productDTO) {
         if (!productRepository.existsById(productDTO.getId())) {
-            throw new ProductNotFoundException("Product not found for update with id " + productDTO.getId());
+            throw new ProductNotFoundException("Product not found for update process with id " + productDTO.getId());
         }
         Product product = ProductDTO.toEntity(productDTO);
         productRepository.save(product);
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new ProductNotFoundException("Product not found for delete with id " + id);
+            throw new ProductNotFoundException("Product not found for delete proccess with id " + id);
         }
         productRepository.deleteById(id);
     }
