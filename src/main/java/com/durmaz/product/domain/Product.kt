@@ -20,8 +20,9 @@ data class Product @JvmOverloads constructor(
         @Column(name = "price" ,nullable = false)
         val price: Double,
 
-        @Column(name = "category" ,nullable = false)
-        val category: String,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "category" , nullable = false)
+        val category: Category,
 
         @Column(name = "available_stock", nullable = false)
         val availableStock: Int,
