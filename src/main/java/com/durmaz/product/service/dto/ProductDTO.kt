@@ -1,5 +1,6 @@
 package com.durmaz.product.service.dto
 
+import com.durmaz.product.domain.Category
 import com.durmaz.product.domain.Product
 
 data class ProductDTO(
@@ -7,7 +8,7 @@ data class ProductDTO(
         val name: String,
         val description: String,
         val price: Double,
-        val category: String,
+        val category: Category,
         val availableStock: Int,
 ){
     companion object{
