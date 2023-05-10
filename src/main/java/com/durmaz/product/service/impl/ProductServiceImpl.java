@@ -41,8 +41,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) {
         Product product = ProductDTO.toEntity(productDTO);
-        productRepository.save(product);
-        ProductDTO result = ProductDTO.toDto(product);
+        Product savedProduct = productRepository.save(product);
+        ProductDTO result = ProductDTO.toDto(savedProduct);
         return result;
     }
 
