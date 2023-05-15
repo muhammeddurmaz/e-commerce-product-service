@@ -50,4 +50,10 @@ public class CategoryResource {
         CategoryDTO result = categoryService.getCategoryById(id);
         return ResponseEntity.ok().body(result);
     }
+
+    @DeleteMapping("/categorys/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable(name = "id")Long id){
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
+    }
 }
