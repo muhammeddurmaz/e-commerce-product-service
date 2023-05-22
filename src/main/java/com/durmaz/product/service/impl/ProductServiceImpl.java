@@ -5,6 +5,7 @@ import com.durmaz.product.repository.ProductRepository;
 import com.durmaz.product.service.ProductService;
 import com.durmaz.product.service.dto.ProductDTO;
 import com.durmaz.product.service.exception.ProductNotFoundException;
+import com.durmaz.product.service.mapper.ProductMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,11 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    private final ProductMapper productMapper;
+
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTO> getAllProducts() {
         return productRepository.findAll()
                 .stream()
-                .map(ProductDTO::toDto)
+                .map(productMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -38,16 +42,16 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public ProductDTO getProductById(Long id) {
         return productRepository.findById(id)
-                .map(ProductDTO::toDto)
+                .map(productMapper::toDto)
                 .orElseThrow(() -> new ProductNotFoundException("Product could not found by id " + id));
     }
 
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) {
         log.debug("Request to save Product : {}", productDTO);
-        Product product = ProductDTO.toEntity(productDTO);
+        Product product = productMapper.toEntity(productDTO);
         Product savedProduct = productRepository.save(product);
-        ProductDTO result = ProductDTO.toDto(savedProduct);
+        ProductDTO result = productMapper.toDto(savedProduct);
         return result;
     }
 
@@ -56,9 +60,9 @@ public class ProductServiceImpl implements ProductService {
         if (!productRepository.existsById(productDTO.getId())) {
             throw new ProductNotFoundException("Product not found for update process with id " + productDTO.getId());
         }
-        Product product = ProductDTO.toEntity(productDTO);
-        productRepository.save(product);
-        ProductDTO result = ProductDTO.toDto(product);
+        Product product = productMapper.toEntity(productDTO);
+        Product updatedProduct = productRepository.save(product);
+        ProductDTO result = productMapper.toDto(updatedProduct);
         return result;
     }
 
@@ -74,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTO> getAllProductByIds(List<Long> ids){
         return productRepository.findAllById(ids)
                 .stream()
-                .map(ProductDTO::toDto)
+                .map(productMapper::toDto)
                 .collect(Collectors.toList());
     }
 }
