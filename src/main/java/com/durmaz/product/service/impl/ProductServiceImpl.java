@@ -5,6 +5,8 @@ import com.durmaz.product.repository.ProductRepository;
 import com.durmaz.product.service.ProductService;
 import com.durmaz.product.service.dto.ProductDTO;
 import com.durmaz.product.service.exception.ProductNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
+
+    private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private final ProductRepository productRepository;
 
@@ -40,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) {
+        log.debug("Request to save Product : {}", productDTO);
         Product product = ProductDTO.toEntity(productDTO);
         Product savedProduct = productRepository.save(product);
         ProductDTO result = ProductDTO.toDto(savedProduct);
@@ -63,5 +68,13 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNotFoundException("Product not found for delete proccess with id " + id);
         }
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductDTO> getAllProductByIds(List<Long> ids){
+        return productRepository.findAllById(ids)
+                .stream()
+                .map(ProductDTO::toDto)
+                .collect(Collectors.toList());
     }
 }

@@ -46,6 +46,12 @@ public class ProductResource {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDTO>> getAllProductByIds(@RequestBody List<Long> ids){
+        List<ProductDTO> result = productService.getAllProductByIds(ids);
+        return ResponseEntity.ok().body(result);
+    }
+
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable(value = "id") Long id){
         ProductDTO result = productService.getProductById(id);
