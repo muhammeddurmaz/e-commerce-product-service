@@ -4,13 +4,16 @@ import com.durmaz.product.service.ProductService;
 import com.durmaz.product.service.dto.ProductDTO;
 import com.durmaz.product.service.exception.BadRequestAlertException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
+@Validated
 public class ProductResource {
     private final ProductService productService;
 
@@ -46,8 +49,14 @@ public class ProductResource {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/products/ids")
+    public ResponseEntity<List<ProductDTO>> getAllProductByIds(@RequestBody @NotNull List<Long> ids){
+        List<ProductDTO> result = productService.getAllProductByIds(ids);
+        return ResponseEntity.ok().body(result);
+    }
+
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable(value = "id") Long id){
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable(value = "id") @NotNull Long id){
         ProductDTO result = productService.getProductById(id);
         return ResponseEntity.ok().body(result);
     }

@@ -10,12 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class ProductServiceTest {
 
@@ -56,5 +55,46 @@ public class ProductServiceTest {
 
         // Repository'nin save metodunun çağrıldığını kontrol ediyo
         verify(productRepository).save(Mockito.any(Product.class));
+    }
+
+
+    @Test
+    public void testUpdateProduct() {
+        // Test verileri
+
+        Long id = 1L;
+        String updatedProductName = "Test Ürünü - Güncelleme";
+        String updatedDescription = "Bu bir test ürünüdür. Güncellendi";
+        Double updatedProductPrice = 20.0;
+        Category updatedCategory = new Category("Test Kategori","Test");
+        int updatedCvailableStock = 5;
+
+        String name = "Test Ürünü";
+        String description = "Bu bir test ürünüdür.";
+        Double price = 10.0;
+        Category category = new Category("Test Kategori","Test");
+        int availableStock = 5;
+
+        ProductDTO existingProductDTO = new ProductDTO(id, name, description, price, category, availableStock);
+
+        Product existingProduct = new Product(id, name, description, price, category, availableStock);
+
+        Product updatedProduct = new Product(id,updatedProductName,updatedDescription,updatedProductPrice,updatedCategory,updatedCvailableStock);
+
+
+        when(productRepository.existsById(id)).thenReturn(true);
+        when(productRepository.save(Mockito.any(Product.class))).thenReturn(updatedProduct);
+
+        // Metodu çağır
+        ProductDTO existingProductU = new ProductDTO(id, updatedProductName, description, updatedProductPrice, category, availableStock);
+        ProductDTO result = productService.updateProduct(existingProductU);
+
+        // Sonucu doğrula
+        assertEquals(id, result.getId());
+        assertEquals(updatedProductName, result.getName());
+        assertEquals(updatedProductPrice, result.getPrice());
+
+        // Repository'nin save metodunun çağrıldığını ve doğru parametrelerle çağrıldığını kontrol et
+        verify(productRepository, times(1)).save(any(Product.class));
     }
 }
