@@ -18,4 +18,9 @@ public class GeneralExceptionHandler {
     public ResponseEntity<?> handleBadRequestAlertException(BadRequestAlertException exception){
         return new ResponseEntity<>(exception.getMessage() , HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<?> handleCategoryNotFoundException(CategoryNotFoundException exception){
+        return new ResponseEntity<>(exception.getMessage() , HttpStatus.NOT_FOUND);
+    }
 }
