@@ -2,6 +2,7 @@ package com.durmaz.product.web.rest;
 
 import com.durmaz.product.service.ProductService;
 import com.durmaz.product.service.dto.ProductDTO;
+import com.durmaz.product.service.dto.ResponseDTO;
 import com.durmaz.product.service.exception.BadRequestAlertException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,16 +23,21 @@ public class ProductResource {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO){
+    public ResponseEntity<ResponseDTO> createProduct(@RequestBody ProductDTO productDTO){
         if (productDTO.getId() != null){
             throw new BadRequestAlertException("A new product cannot already have an ID");
         }
         ProductDTO result = productService.saveProduct(productDTO);
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Uptade Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<ProductDTO> uptadeProduct(@PathVariable(value = "id") Long id,@RequestBody ProductDTO productDTO){
+    public ResponseEntity<ResponseDTO> uptadeProduct(@PathVariable(value = "id") Long id,@RequestBody ProductDTO productDTO){
         if (productDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id");
         }
@@ -40,31 +46,55 @@ public class ProductResource {
         }
 
         ProductDTO result = productService.updateProduct(productDTO);
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Uptade Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductDTO>> getAllProduct(){
+    public ResponseEntity<ResponseDTO> getAllProduct(){
         List<ProductDTO> result = productService.getAllProducts();
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get All Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/products/ids")
-    public ResponseEntity<List<ProductDTO>> getAllProductByIds(@RequestBody @NotNull List<Long> ids){
+    public ResponseEntity<ResponseDTO> getAllProductByIds(@RequestBody @NotNull List<Long> ids){
         List<ProductDTO> result = productService.getAllProductByIds(ids);
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable(value = "id") @NotNull Long id){
+    public ResponseEntity<ResponseDTO> getProductById(@PathVariable(value = "id") @NotNull Long id){
         ProductDTO result = productService.getProductById(id);
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Create Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "id")Long id){
+    public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable(value = "id")Long id){
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Delete Success")
+                .success(true)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
 }

@@ -2,6 +2,7 @@ package com.durmaz.product.web.rest;
 
 import com.durmaz.product.service.CategoryService;
 import com.durmaz.product.service.dto.CategoryDTO;
+import com.durmaz.product.service.dto.ResponseDTO;
 import com.durmaz.product.service.exception.BadRequestAlertException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +20,21 @@ public class CategoryResource {
     }
 
     @PostMapping("/categorys")
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<ResponseDTO> createCategory(@RequestBody CategoryDTO categoryDTO){
         if (categoryDTO.getId() != null){
             throw new BadRequestAlertException("A new category cannot already have an ID");
         }
         CategoryDTO result = categoryService.saveCategory(categoryDTO);
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Create Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @PutMapping("/categorys/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable(name = "id")Long id, @RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<ResponseDTO> updateCategory(@PathVariable(name = "id")Long id, @RequestBody CategoryDTO categoryDTO){
         if (categoryDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id");
         }
@@ -36,24 +42,43 @@ public class CategoryResource {
             throw new BadRequestAlertException("incompatible id");
         }
         CategoryDTO result = categoryService.updateCategory(categoryDTO);
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Update Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/categorys")
-    public ResponseEntity<List<CategoryDTO>> getAllCategory(){
+    public ResponseEntity<ResponseDTO> getAllCategory(){
         List<CategoryDTO> result = categoryService.getAllCategory();
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get All Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/categorys/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable(name = "id") Long id){
+    public ResponseEntity<ResponseDTO> getCategoryById(@PathVariable(name = "id") Long id){
         CategoryDTO result = categoryService.getCategoryById(id);
-        return ResponseEntity.ok().body(result);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get Success")
+                .success(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @DeleteMapping("/categorys/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable(name = "id")Long id){
+    public ResponseEntity<ResponseDTO> deleteCategory(@PathVariable(name = "id")Long id){
         categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Delete Success")
+                .success(true)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
 }
