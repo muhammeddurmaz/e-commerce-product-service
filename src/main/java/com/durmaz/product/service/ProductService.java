@@ -13,4 +13,8 @@ public interface ProductService {
     void deleteProduct(Long id);
 
     List<ProductDTO> getAllProductByIds(List<Long> ids);
+
+    Double getProductPriceById(Long id);
+
+    Double getSumProductPriceByIds(List<Long> id);
 }

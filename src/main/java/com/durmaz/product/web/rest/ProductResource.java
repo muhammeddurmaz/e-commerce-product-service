@@ -4,6 +4,7 @@ import com.durmaz.product.service.ProductService;
 import com.durmaz.product.service.dto.ProductDTO;
 import com.durmaz.product.service.dto.ResponseDTO;
 import com.durmaz.product.service.exception.BadRequestAlertException;
+import com.durmaz.product.service.exception.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @RequestMapping("/api")
 @Validated
 public class ProductResource {
+    private final static String ENTITY_NAME = "procut";
     private final ProductService productService;
 
     public ProductResource(ProductService productService) {
@@ -29,10 +31,9 @@ public class ProductResource {
         }
         ProductDTO result = productService.saveProduct(productDTO);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Uptade Success")
+                .message("Create Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -47,10 +48,9 @@ public class ProductResource {
 
         ProductDTO result = productService.updateProduct(productDTO);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Uptade Success")
+                .message("Updated Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -58,10 +58,9 @@ public class ProductResource {
     public ResponseEntity<ResponseDTO> getAllProduct(){
         List<ProductDTO> result = productService.getAllProducts();
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Get All Success")
+                .message("Get All Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -69,10 +68,9 @@ public class ProductResource {
     public ResponseEntity<ResponseDTO> getAllProductByIds(@RequestBody @NotNull List<Long> ids){
         List<ProductDTO> result = productService.getAllProductByIds(ids);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Get Success")
+                .message("Get All Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -80,10 +78,29 @@ public class ProductResource {
     public ResponseEntity<ResponseDTO> getProductById(@PathVariable(value = "id") @NotNull Long id){
         ProductDTO result = productService.getProductById(id);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Create Success")
+                .message("Get Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/product-price/{id}")
+    public ResponseEntity<ResponseDTO> getProductPrice(@PathVariable(value = "id") @NotNull Long id){
+        Double result = productService.getProductPriceById(id);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get Success",ENTITY_NAME)
+                .success(true)
+                .data(result);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/product-sumPrice")
+    public ResponseEntity<ResponseDTO> getSumProductPrice(@RequestParam List<Long> ids){
+        Double result = productService.getSumProductPriceByIds(ids);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get Success",ENTITY_NAME)
+                .success(true)
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -91,7 +108,7 @@ public class ProductResource {
     public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable(value = "id")Long id){
         productService.deleteProduct(id);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Delete Success")
+                .message("Deleted Success",ENTITY_NAME)
                 .success(true)
                 .build();
         return ResponseEntity.ok().body(responseDTO);

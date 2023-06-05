@@ -1,12 +1,17 @@
 package com.durmaz.product.service.dto
 
+import java.util.Objects
+
 data class ResponseDTO<T> @JvmOverloads constructor(
-        var message: String? = "",
+        var message: HashMap<String,String> ? = null,
         var success: Boolean? = false,
         var data : T ? = null
 ){
-    fun message(message: String): ResponseDTO<T> {
-        this.message = message
+    fun message(message: String,entityName: String): ResponseDTO<T> {
+        val map = HashMap<String,String>()
+        map.put("message",message)
+        map.put("entity",entityName)
+        this.message = map
         return this
     }
 
