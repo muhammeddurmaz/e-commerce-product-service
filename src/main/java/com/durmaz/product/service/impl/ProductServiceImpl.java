@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,5 +81,23 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(productMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Double getProductPriceById(Long id){
+        Optional<Double> price = productRepository.getProductPrice(id);
+        if(price.isEmpty()){
+            throw new ProductNotFoundException("Product Not Found id: "+ id);
+        }
+        return price.get();
+    }
+
+    @Override
+    public Double getSumProductPriceByIds(List<Long> ids){
+        Optional<Double> sumPrice = productRepository.getSumProductPriceByIds(ids);
+        if(sumPrice.isEmpty()){
+            throw new ProductNotFoundException("Product Not Found id: ");
+        }
+        return sumPrice.get();
     }
 }

@@ -13,6 +13,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api")
 public class CategoryResource {
+
+    private final static String ENTITY_NAME = "category";
     private final CategoryService categoryService;
 
     public CategoryResource(CategoryService categoryService) {
@@ -26,10 +28,9 @@ public class CategoryResource {
         }
         CategoryDTO result = categoryService.saveCategory(categoryDTO);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Create Success")
+                .message("Create Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -43,10 +44,9 @@ public class CategoryResource {
         }
         CategoryDTO result = categoryService.updateCategory(categoryDTO);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Update Success")
+                .message("Updated Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -54,10 +54,9 @@ public class CategoryResource {
     public ResponseEntity<ResponseDTO> getAllCategory(){
         List<CategoryDTO> result = categoryService.getAllCategory();
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Get All Success")
+                .message("Get ALl Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -65,10 +64,9 @@ public class CategoryResource {
     public ResponseEntity<ResponseDTO> getCategoryById(@PathVariable(name = "id") Long id){
         CategoryDTO result = categoryService.getCategoryById(id);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Get Success")
+                .message("Get Success",ENTITY_NAME)
                 .success(true)
-                .data(result)
-                .build();
+                .data(result);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -76,7 +74,7 @@ public class CategoryResource {
     public ResponseEntity<ResponseDTO> deleteCategory(@PathVariable(name = "id")Long id){
         categoryService.deleteCategory(id);
         ResponseDTO responseDTO = new ResponseDTO<>()
-                .message("Delete Success")
+                .message("Deleted Success",ENTITY_NAME)
                 .success(true)
                 .build();
         return ResponseEntity.ok().body(responseDTO);
