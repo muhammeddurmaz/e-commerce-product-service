@@ -4,6 +4,7 @@ import com.durmaz.product.service.ProductService;
 import com.durmaz.product.service.dto.ProductDTO;
 import com.durmaz.product.service.dto.ResponseDTO;
 import com.durmaz.product.service.exception.BadRequestAlertException;
+import com.durmaz.product.service.exception.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +77,26 @@ public class ProductResource {
     @GetMapping("/products/{id}")
     public ResponseEntity<ResponseDTO> getProductById(@PathVariable(value = "id") @NotNull Long id){
         ProductDTO result = productService.getProductById(id);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get Success",ENTITY_NAME)
+                .success(true)
+                .data(result);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/product-price/{id}")
+    public ResponseEntity<ResponseDTO> getProductPrice(@PathVariable(value = "id") @NotNull Long id){
+        Double result = productService.getProductPriceById(id);
+        ResponseDTO responseDTO = new ResponseDTO<>()
+                .message("Get Success",ENTITY_NAME)
+                .success(true)
+                .data(result);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/product-sumPrice")
+    public ResponseEntity<ResponseDTO> getSumProductPrice(@RequestParam List<Long> ids){
+        Double result = productService.getSumProductPriceByIds(ids);
         ResponseDTO responseDTO = new ResponseDTO<>()
                 .message("Get Success",ENTITY_NAME)
                 .success(true)
